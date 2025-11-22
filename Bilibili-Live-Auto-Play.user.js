@@ -15,7 +15,7 @@
 
 (function () {
     'use strict';
-    if (window。top !== window。self) {
+    if (window.top !== window.self) {
     console.log("【BLAP】检测到 iframe 内部，不执行脚本");
     return;
 }
@@ -23,7 +23,7 @@
     // ---- 提取直播间号 ----
     const match = window.location.pathname.match(/(\d+)$/);
     if (!match) {
-        console。warn("【BLAP】无法解析直播间号");
+        console.warn("【BLAP】无法解析直播间号");
         return;
     }
     const roomId = match[1];
@@ -31,7 +31,7 @@
     const refreshedFlagKey = `bili_live_refreshed_${roomId}`;
 
     if (sessionStorage.getItem(refreshedFlagKey) === "1") {
-        console。log("【BLAP】刷新后标记已存在，不再继续检测。");
+        console.log("【BLAP】刷新后标记已存在，不再继续检测。");
         return;
     }
 
@@ -50,16 +50,16 @@
         return new Promise((resolve) => {
             GM_xmlhttpRequest({
                 method: "GET",
-                url: `https://api.vc.bilibili.com/account/v1/user/cards?uids=${uid}`，
+                url: `https://api.vc.bilibili.com/account/v1/user/cards?uids=${uid}`,
                 onload: (res) => {
                     try {
-                        const json = JSON。parse(res。responseText);
+                        const json = JSON.parse(res。responseText);
                         resolve(json。data?.[0]?.name || "主播");
                     } catch (e) {
                         console.error("【BLAP】解析昵称失败:", e);
                         resolve("主播");
                     }
-                }，
+                },
                 onerror: () => resolve("主播")
             });
         });
@@ -69,7 +69,7 @@
     function speak(text) {
         const utter = new SpeechSynthesisUtterance(text);
         utter。lang = "zh-CN";
-        speechSynthesis。speak(utter);
+        speechSynthesis.speak(utter);
     }
 
     // ---- 检查直播状态 ----
