@@ -42,7 +42,7 @@
         const url = apiUrl;
         const res = await fetch(url);
         const json = await res.json();
-        return json。data?.uid || null;
+        return json.data?.uid || null;
     }
 
     // ---- 获取主播昵称 ----
@@ -54,7 +54,7 @@
                 onload: (res) => {
                     try {
                         const json = JSON.parse(res.responseText);
-                        resolve(json。data?.[0]?.name || "主播");
+                        resolve(json.data?.[0]?.name || "主播");
                     } catch (e) {
                         console.error("【BLAP】解析昵称失败:", e);
                         resolve("主播");
@@ -68,7 +68,7 @@
     // ---- 语音播报 ----
     function speak(text) {
         const utter = new SpeechSynthesisUtterance(text);
-        utter。lang = "zh-CN";
+        utter.lang = "zh-CN";
         speechSynthesis.speak(utter);
     }
 
