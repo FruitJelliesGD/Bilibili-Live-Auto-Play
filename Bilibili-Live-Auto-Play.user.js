@@ -53,7 +53,7 @@
                 url: `https://api.vc.bilibili.com/account/v1/user/cards?uids=${uid}`,
                 onload: (res) => {
                     try {
-                        const json = JSON.parse(res。responseText);
+                        const json = JSON.parse(res.responseText);
                         resolve(json。data?.[0]?.name || "主播");
                     } catch (e) {
                         console.error("【BLAP】解析昵称失败:", e);
