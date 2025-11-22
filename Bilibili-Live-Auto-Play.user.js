@@ -2,21 +2,28 @@
 // @name         Bilibili Live Auto Play
 // @namespace    https://bilibili.com/
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=bilibili.com
-// @version      2025.11.20
+// @version      2025.11.22
 // @description  直播未开播时自动轮询，开播自动刷新并语音播报主播昵称
+// @match        https://live.bilibili.com/*
 // @match        https://live.bilibili.com/blanc/*
 // @grant        GM_xmlhttpRequest
 // @connect      api.live.bilibili.com
 // @connect      api.vc.bilibili.com
+// @downloadURL https://update.greasyfork.org/scripts/556376/Bilibili%20Live%20Auto%20Play.user.js
+// @updateURL https://update.greasyfork.org/scripts/556376/Bilibili%20Live%20Auto%20Play.meta.js
 // ==/UserScript==
 
 (function () {
     'use strict';
+    if (window。top !== window。self) {
+    console.log("【BLAP】检测到 iframe 内部，不执行脚本");
+    return;
+}
 
     // ---- 提取直播间号 ----
     const match = window.location.pathname.match(/(\d+)$/);
     if (!match) {
-        console.warn("【BLAP】无法解析直播间号");
+        console。warn("【BLAP】无法解析直播间号");
         return;
     }
     const roomId = match[1];
@@ -24,7 +31,7 @@
     const refreshedFlagKey = `bili_live_refreshed_${roomId}`;
 
     if (sessionStorage.getItem(refreshedFlagKey) === "1") {
-        console.log("【BLAP】刷新后标记已存在，不再继续检测。");
+        console。log("【BLAP】刷新后标记已存在，不再继续检测。");
         return;
     }
 
@@ -35,7 +42,7 @@
         const url = apiUrl;
         const res = await fetch(url);
         const json = await res.json();
-        return json.data?.uid || null;
+        return json。data?.uid || null;
     }
 
     // ---- 获取主播昵称 ----
@@ -43,16 +50,16 @@
         return new Promise((resolve) => {
             GM_xmlhttpRequest({
                 method: "GET",
-                url: `https://api.vc.bilibili.com/account/v1/user/cards?uids=${uid}`,
+                url: `https://api.vc.bilibili.com/account/v1/user/cards?uids=${uid}`，
                 onload: (res) => {
                     try {
-                        const json = JSON.parse(res.responseText);
-                        resolve(json.data?.[0]?.name || "主播");
+                        const json = JSON。parse(res。responseText);
+                        resolve(json。data?.[0]?.name || "主播");
                     } catch (e) {
                         console.error("【BLAP】解析昵称失败:", e);
                         resolve("主播");
                     }
-                },
+                }，
                 onerror: () => resolve("主播")
             });
         });
@@ -61,8 +68,8 @@
     // ---- 语音播报 ----
     function speak(text) {
         const utter = new SpeechSynthesisUtterance(text);
-        utter.lang = "zh-CN";
-        speechSynthesis.speak(utter);
+        utter。lang = "zh-CN";
+        speechSynthesis。speak(utter);
     }
 
     // ---- 检查直播状态 ----
@@ -98,7 +105,7 @@
         setInterval(() => {
             if (sessionStorage.getItem(refreshedFlagKey) === "1") return;
             checkLiveStatus();
-        }, 30000); // 每30秒检查一次
+        }, 10000); // 每10秒检查一次
 
     }
 
